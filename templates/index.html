@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" >
+        <title>MLOps Project</title>
+        <link rel="stylesheet" href="/static/styles.css"/>
+    </head>
+    <body>
+        <h1>MLOps Final Project</h1>
+        <p>By: Devendra Govil</p>
+        <br/>
+        <p>
+            This website is part of the MLOps Final Project.<br/>
+            Please fill the form below to get your credit card application processed. <br/>
+            Please don't enter any sensitive information, use fictitious information where required!<br/>
+        </p>
+        <form action="/credit-card-application" method="post" target="_blank">
+            <label for="limit">Please enter the credit limit available to you (in $):</label>
+            <br/>
+            <input type="number" name="limit" id="limit" min="0">
+            <br/>
+            <br/>
+            <label for="gender">Please enter your gender:</label>
+            <br/>
+            <select id="gender" name="gender" size="3">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+            </select>
+            <br/>
+
+            <br/>
+            <label for="education">Please enter your education level:</label>
+            <br/>
+            <select id="education" name="education" size="5">
+            <option value="GraduateSchool">Graduate School</option>
+            <option value="University">University</option>
+            <option value="HighSchool">High School</option>
+            <option value="Others">Others</option>
+            <option value="Unknown">Unknown</option>
+            </select>
+            <br/>
+
+            <br/>
+            <label for="marital">Please indicate your marital status:</label>
+            <br/>
+            <select id="marital" name="marital" size="3">
+            <option value="married">Married</option>
+            <option value="single">Single</option>
+            <option value="other">Other</option>
+            </select>
+            <br/>
+            <br/>
+
+            <label for="age">Please enter your age:</label>
+            <br/>
+            <input type="number" name="age" id="age" min="18" max="100">
+            <br/>
+
+            <p>Please enter the last 6 months of your payment history. <br/>
+                0 means that the payment occured on time. <br/>
+                1 means that the payment was delayed by 1 month, and so on.. <br/>
+                So, 6 means that the payment was delayed by 6 months. <br/></p>
+            
+            <label for="pst1">Enter your payment status (most recent month):</label>
+            <br/>
+            <input type="number" name="pst1" id="pst1" min="0" max="15">
+            <br/>
+
+            <label for="pst2">Enter your payment status (one month back):</label>
+            <br/>
+            <input type="number" name="pst2" id="pst2" min="0" max="15">
+            <br/>
+
+            <label for="pst3">Enter your payment status (two months back):</label>
+            <br/>
+            <input type="number" name="pst3" id="pst3" min="0" max="15">
+            <br/>
+
+            <label for="pst4">Enter your payment status (three months back):</label>
+            <br/>
+            <input type="number" name="pst4" id="pst4" min="0" max="15">
+            <br/>
+
+            <label for="pst5">Enter your payment status (four months back):</label>
+            <br/>
+            <input type="number" name="pst5" id="pst5" min="0" max="15">
+            <br/>
+
+            <label for="pst6">Enter your payment status (five months back):</label>
+            <br/>
+            <input type="number" name="pst6" id="pst6" min="0" max="15">
+            <br/>
+
+            
+
+            <br/>
+            <input type="submit" value="Submit" />
+
+        </form>
+        
+    </body>
+</html>

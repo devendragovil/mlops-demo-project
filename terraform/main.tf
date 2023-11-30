@@ -71,3 +71,16 @@ resource "aws_instance" "mlops-ec2-instance" {
     volume_size = 10
   }
 }
+
+resource "aws_dynamodb_table" "mlops-dynamodb" {
+  name           = "customer-applications"
+  billing_mode   = "PROVISIONED"
+  read_capacity  = 1
+  write_capacity = 2
+  hash_key       = "ID"
+
+  attribute {
+    name = "ID"
+    type = "S"
+  }
+}

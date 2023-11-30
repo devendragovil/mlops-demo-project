@@ -9,7 +9,6 @@ import pickle
 
 
 rel_columns = [
-    'ID',
     'LIMIT_BAL',
     'SEX',
     'EDUCATION',
