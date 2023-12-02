@@ -9,6 +9,12 @@ import pandas as pd
 import numpy as np
 import json
 import uuid
+from fastapi.responses import HTMLResponse
+from evidently.report import Report
+from evidently.metrics.base_metric import generate_column_metrics
+from evidently.metric_preset import DataDriftPreset, TargetDriftPreset
+from evidently.metrics import *
+import os
 
 app = FastAPI()
 templates = Jinja2Templates(directory='templates/')
@@ -75,7 +81,8 @@ async def credit_card_application(
     pst6: Annotated[int, Form()],
     request: Request
 ):
-    bt3s = boto3.Session(profile_name='dgovil-cli')
+    bt3s = boto3.Session(aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+    aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
     ddb = bt3s.client('dynamodb')
     data = [
         limit, 
@@ -144,4 +151,57 @@ async def credit_card_application(
         return templates.TemplateResponse('success.html', {"request": request})
     else:
         return templates.TemplateResponse('failure.html', {"request": request})
+
+
+@app.get('/data-drift', response_class=HTMLResponse)
+async def index_page(request: Request):
+    rel_columns = [
+        'LIMIT_BAL',
+        'SEX',
+        'EDUCATION',
+        'MARRIAGE',
+        'AGE',
+        'PAY_0',
+        'PAY_2',
+        'PAY_3',
+        'PAY_4',
+        'PAY_5',
+        'PAY_6',
+        'default.payment.next.month'
+    ]
+    training_data = pd.read_csv('./UCI_Credit_Card.csv', usecols=rel_columns)
+    bt3s = boto3.Session(aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+    aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
+    ddb = bt3s.client('dynamodb')
+    response  = ddb.scan(TableName='customer-applications')
+    all_items = response['Items']
+
+    all_rows = []
+    for item in all_items:
+        row = []
+        row.append(int(item["LIMIT_BAL"]["N"]))
+        row.append(int(item["SEX"]["N"]))
+        row.append(int(item["EDUCATION"]["N"]))
+        row.append(int(item["MARRIAGE"]["N"]))
+        row.append(int(item["AGE"]["N"]))
+        row.append(int(item["PAY_0"]["N"]))
+        row.append(int(item["PAY_2"]["N"]))
+        row.append(int(item["PAY_3"]["N"]))
+        row.append(int(item["PAY_4"]["N"]))
+        row.append(int(item["PAY_5"]["N"]))
+        row.append(int(item["PAY_6"]["N"]))
+        pred = model.predict([row])[0]
+        row.append(pred)
+        all_rows.append(row)
     
+    new_data = pd.DataFrame(all_rows)
+    new_data.columns = rel_columns
+
+    report = Report(metrics=[
+        DataDriftPreset(), 
+    ])
+
+    report.run(reference_data=training_data, current_data=new_data)
+    report
+    
+    return report.get_html()
