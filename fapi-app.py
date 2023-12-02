@@ -73,6 +73,7 @@ async def credit_card_application(
     pst4: Annotated[int, Form()],
     pst5: Annotated[int, Form()],
     pst6: Annotated[int, Form()],
+    request: Request
 ):
     bt3s = boto3.Session(profile_name='dgovil-cli')
     ddb = bt3s.client('dynamodb')
@@ -136,32 +137,11 @@ async def credit_card_application(
     prediction = model.predict([data])
 
     success_flag = prediction[0]
+    print(data)
+    print(success_flag)
 
     if success_flag == 0:
-        return """<!DOCTYPE html>
-        <html lang="en">
-            <head>
-                <meta charset="UTF-8" >
-                <title>MLOps Project</title>
-                <link rel="stylesheet" href="/static/styles.css"/>
-            </head>
-            <body>
-                <h1>CONGRATS! YOU HAVE BEEN APPROVED!</h1>
-            </body>
-        </html>"""
+        return templates.TemplateResponse('success.html', {"request": request})
     else:
-        return """
-        <!DOCTYPE html>
-        <html lang="en">
-            <head>
-                <meta charset="UTF-8" >
-                <title>MLOps Project</title>
-                <link rel="stylesheet" href="/static/styles.css"/>
-            </head>
-            <body>
-                <h1>UNFORTUNATELY YOUR APPLICATION HAS BEEN REJECTED!</h1>
-                <p>Please try again later...</p>
-            </body>
-        </html>
-        """
+        return templates.TemplateResponse('failure.html', {"request": request})
     
