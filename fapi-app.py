@@ -81,7 +81,7 @@ async def credit_card_application(
     pst6: Annotated[int, Form()],
     request: Request
 ):
-    bt3s = boto3.Session(aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+    bt3s = boto3.Session(region_name='us-west-2', aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
     aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
     ddb = bt3s.client('dynamodb')
     data = [
@@ -170,7 +170,7 @@ async def index_page(request: Request):
         'default.payment.next.month'
     ]
     training_data = pd.read_csv('./UCI_Credit_Card.csv', usecols=rel_columns)
-    bt3s = boto3.Session(aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
+    bt3s = boto3.Session(region_name='us-west-2',aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
     aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'))
     ddb = bt3s.client('dynamodb')
     response  = ddb.scan(TableName='customer-applications')
